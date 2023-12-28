@@ -1,4 +1,4 @@
-package com.example.test6.presenter
+package com.example.test6.presenter.common
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,9 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 
 
+
 typealias Inflater<VB> = (LayoutInflater, ViewGroup?, Boolean) -> VB  // lambda function
-
-
 abstract class BaseFragment<VB: ViewBinding>(private val inflate : Inflater<VB>): Fragment() {
 
     // This property is only valid between onCreateView and onDestroyView.
@@ -37,6 +36,7 @@ abstract class BaseFragment<VB: ViewBinding>(private val inflate : Inflater<VB>)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUp()
+        setListeners()
     }
 
     override fun onDestroyView() {
@@ -44,10 +44,7 @@ abstract class BaseFragment<VB: ViewBinding>(private val inflate : Inflater<VB>)
         _binding = null
     }
 
-    open fun setUp(){
-
-    }
-    open fun initData(savedInstanceState: Bundle?){
-
-    }
+    open fun setUp(){}
+    open fun initData(savedInstanceState: Bundle?){}
+    open fun setListeners(){}
 }

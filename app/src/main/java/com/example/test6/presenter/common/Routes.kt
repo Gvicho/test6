@@ -1,4 +1,4 @@
-package com.example.test6.presenter
+package com.example.test6.presenter.common
 
 class Routes {
     // aq unda passwordidan -> homepage
