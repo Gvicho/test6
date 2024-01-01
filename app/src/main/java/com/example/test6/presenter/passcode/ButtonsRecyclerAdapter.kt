@@ -1,40 +1,33 @@
 package com.example.test6.presenter.passcode
 
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.test6.R
 import com.example.test6.databinding.ButtonItemIconRecyclerBinding
 import com.example.test6.databinding.ButtonItemRecyclerBinding
 
 
-class ButtonsRecyclerAdapter(private val listener: ClickCallBack): ListAdapter<KeyboardButton, RecyclerView.ViewHolder>(
-    DIFF_CALLBACK
-) {
+class ButtonsRecyclerAdapter(private val listener: ClickCallBack): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    var data = listOf<KeyboardButton>()
+        @SuppressLint("NotifyDataSetChanged") // because this will only be changed once...
+        set(value) {
+            field = value
+            notifyDataSetChanged() // Notify any registered observers that the data set has changed.
+        }
 
     companion object {
 
         const val NUMBER = 1
         const val ICON = 2
-
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<KeyboardButton>() {
-            override fun areItemsTheSame(oldItem: KeyboardButton, newItem: KeyboardButton): Boolean {
-                return oldItem.id == newItem.id
-            }
-
-            override fun areContentsTheSame(oldItem: KeyboardButton, newItem: KeyboardButton): Boolean {
-                return oldItem == newItem
-            }
-        }
     }
 
     inner class NumberViewHolder(private val binding: ButtonItemRecyclerBinding):RecyclerView.ViewHolder(binding.root){
 
         fun bind(position: Int){
-            val button = currentList[position]
+            val button = data[position]
             setNumber(button.content)
         }
 
@@ -51,7 +44,7 @@ class ButtonsRecyclerAdapter(private val listener: ClickCallBack): ListAdapter<K
     inner class IconViewHolder(private val binding: ButtonItemIconRecyclerBinding):RecyclerView.ViewHolder(binding.root){
 
         fun bind(position: Int){
-            val button = currentList[position]
+            val button = data[position]
             setIcon(button.content)
             when(button.iconType){
                 IconType.DELETE -> {
@@ -76,11 +69,14 @@ class ButtonsRecyclerAdapter(private val listener: ClickCallBack): ListAdapter<K
     }
 
     override fun getItemViewType(position: Int): Int {
-        val item = getItem(position)
+        val item = data[position]
         return when (item.buttonType) {
             ButtonType.NUMBER -> NUMBER  //item1
             ButtonType.ICON -> ICON  //item2
         }
+    }
+    override fun getItemCount(): Int {
+        return data.size
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {

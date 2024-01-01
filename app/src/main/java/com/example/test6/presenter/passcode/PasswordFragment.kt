@@ -47,7 +47,7 @@ class PasswordFragment : BaseFragment<FragmentPasswordBinding>(FragmentPasswordB
             setHasFixedSize(false)
             adapter = myAdaper
         }
-        myAdaper.submitList(buttonsList())
+        myAdaper.data = buttonsList()
     }
 
     private fun buttonsList() = viewModel.buttonList // list is declared in viewModel
