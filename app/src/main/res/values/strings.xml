@@ -5,4 +5,10 @@
     <string name="security_screen">Security Screen</string>
     <string name="enter_your_passcode">Enter your passcode</string>
     <string name="forgot_password">Forgot password?</string>
+    <string name="home">Home</string>
+    <string name="your_transactions">Your Transactions:</string>
+    <string name="home_screen">Home Screen</string>
+    <string name="log_out">Log out</string>
+    <string name="empty">Empty</string>
+    <string name="_0">0</string>
 </resources>

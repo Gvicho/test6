@@ -1,9 +1,9 @@
 package com.example.test6.presenter.passcode
 
-import android.util.Log
 import android.util.Log.d
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.test6.R
 import com.example.test6.domain.passcode.PasswordRepository
 import com.example.test6.data.common.ResultWrapper
 import com.example.test6.domain.passcode.PasscodeResponse
@@ -17,16 +17,31 @@ import javax.inject.Inject
 @HiltViewModel
 class PasswordViewModel @Inject constructor(private val passwordRepository:PasswordRepository) : ViewModel() {
 
-    private val _passwordFlow = MutableStateFlow<PasswordState>(PasswordState())
-    val passwordFlow: StateFlow<PasswordState> = _passwordFlow
+    private val _passwordFlow = MutableStateFlow<PasswordScreenState>(PasswordScreenState())
+    val passwordFlow: StateFlow<PasswordScreenState> = _passwordFlow
+
+    val buttonList = listOf(
+        KeyboardButton(1,ButtonType.NUMBER,1),
+        KeyboardButton(2,ButtonType.NUMBER,2),
+        KeyboardButton(3,ButtonType.NUMBER,3),
+        KeyboardButton(4,ButtonType.NUMBER,4),
+        KeyboardButton(5,ButtonType.NUMBER,5),
+        KeyboardButton(6,ButtonType.NUMBER,6),
+        KeyboardButton(7,ButtonType.NUMBER,7),
+        KeyboardButton(8,ButtonType.NUMBER,8),
+        KeyboardButton(9,ButtonType.NUMBER,9),
+        KeyboardButton(10,ButtonType.ICON, R.drawable.ic_touch),
+        KeyboardButton(11,ButtonType.NUMBER,0),
+        KeyboardButton(12,ButtonType.ICON, R.drawable.ic_delete)
+    )
 
     fun addDigit(digit: Int) {
         val currentPasswordState = _passwordFlow.value
         val passwordList = currentPasswordState.password
         if(passwordList.size in 0..3){
             viewModelScope.launch {
-                val newPasswordState = PasswordState(passwordList+digit)
-                _passwordFlow.emit(newPasswordState)
+                val newPasswordScreenState = PasswordScreenState(passwordList+digit)
+                _passwordFlow.emit(newPasswordScreenState)
             }
             if(passwordList.size == 3)checkPassword()
         }
@@ -37,7 +52,7 @@ class PasswordViewModel @Inject constructor(private val passwordRepository:Passw
         val passwordList = currentPasswordState.password
         if(passwordList.size in 1..4){
             viewModelScope.launch {
-                _passwordFlow.emit(PasswordState(passwordList.dropLast(1)))
+                _passwordFlow.emit(PasswordScreenState(passwordList.dropLast(1)))
             }
         }
 
@@ -48,14 +63,16 @@ class PasswordViewModel @Inject constructor(private val passwordRepository:Passw
         val passwordList = currentPasswordState.password
         val password = passwordList.joinToString("")
 
-        var resultWrapper: ResultWrapper<PasscodeResponse>? = null
+        var resultWrapper: ResultWrapper<PasscodeResponse>?
         if(passwordList == listOf(0,9,3,4)){
             d("tag123","success")
             resultWrapper = ResultWrapper.Success(
                 PasscodeResponse("")
             )
         }else{
-
+            resultWrapper = ResultWrapper.Error(
+                "incorrect password"
+            )
         }
         viewModelScope.launch {
             if(passwordList == listOf(0,9,3,4)){
@@ -63,34 +80,34 @@ class PasswordViewModel @Inject constructor(private val passwordRepository:Passw
                     when(it){
                         is ResultWrapper.Success ->{
                             resultWrapper = ResultWrapper.Success(data = it.data!!)
-                            val newPasswordState = PasswordState(
+                            val newPasswordScreenState = PasswordScreenState(
                                 emptyList(),
                                 resultWrapper
                             )
                             d("tag123","success ${it.data}")
                             _passwordFlow.emit(
-                                newPasswordState
+                                newPasswordScreenState
                             )
                         }
                         is ResultWrapper.Error -> {
                             resultWrapper = ResultWrapper.Error(errorMessage = it.errorMessage!!)
-                            val newPasswordState = PasswordState(
+                            val newPasswordScreenState = PasswordScreenState(
                                 emptyList(),
                                 resultWrapper
                             )
                             d("tag123","not success ${it.errorMessage}")
                             _passwordFlow.emit(
-                                newPasswordState
+                                newPasswordScreenState
                             )
                         }
                         is ResultWrapper.Loading -> {
                             resultWrapper = ResultWrapper.Loading(loading = it.loading)
-                            val newPasswordState = PasswordState(
+                            val newPasswordScreenState = PasswordScreenState(
                                 emptyList(),
                                 resultWrapper
                             )
                             _passwordFlow.emit(
-                                newPasswordState
+                                newPasswordScreenState
                             )
                         }
                     }
@@ -100,12 +117,12 @@ class PasswordViewModel @Inject constructor(private val passwordRepository:Passw
                 resultWrapper = ResultWrapper.Error(
                     "Incorrect Passcode"
                 )
-                val newPasswordState = PasswordState(
+                val newPasswordScreenState = PasswordScreenState(
                     emptyList(),
                     resultWrapper
                 )
                 _passwordFlow.emit(
-                    newPasswordState
+                    newPasswordScreenState
                 )
             }
 

@@ -9,7 +9,11 @@
         android:id="@+id/homePageFragment"
         android:name="com.example.test6.presenter.home.HomePageFragment"
         android:label="fragment_home_page"
-        tools:layout="@layout/fragment_home_page" />
+        tools:layout="@layout/fragment_home_page" >
+        <action
+            android:id="@+id/action_homePageFragment_to_passwordFragment"
+            app:destination="@id/passwordFragment" />
+    </fragment>
     <fragment
         android:id="@+id/passwordFragment"
         android:name="com.example.test6.presenter.passcode.PasswordFragment"

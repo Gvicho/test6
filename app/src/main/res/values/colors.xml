@@ -4,4 +4,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="green">#32D74B</color>
     <color name="grey">#8E8E93</color>
+    <color name="transparent">#00FFFFFF</color>
+    <color name="blue_electric">#3434C5</color>
 </resources>

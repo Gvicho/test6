@@ -1,5 +1,6 @@
 package com.example.test6.di
 
+import com.example.test6.data.home.TransactionsService
 import com.example.test6.data.passcode.PasscodeService
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -33,5 +34,11 @@ object AppModule {
     @Provides
     fun providePasscodeService(retrofit: Retrofit):PasscodeService{
         return retrofit.create(PasscodeService::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideTransactionsService(retrofit: Retrofit):TransactionsService{
+        return retrofit.create(TransactionsService::class.java)
     }
 }
