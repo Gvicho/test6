@@ -4,5 +4,5 @@ import com.example.test6.data.common.ResultWrapper
 import kotlinx.coroutines.flow.Flow
 
 interface TransactionsRepository {
-    suspend fun getTransactions(): Flow<ResultWrapper<Transactions>>
+    suspend fun getTransactions(token:String): Flow<ResultWrapper<Transactions>>
 }

@@ -5,5 +5,8 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
-    <style name="Theme.Test6" parent="Base.Theme.Test6" />
+    <style name="Theme.Test6" parent="Base.Theme.Test6">
+        <!-- Disable default splash screen -->
+        <item name="android:windowIsTranslucent">true</item> // add this line
+    </style>
 </resources>

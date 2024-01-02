@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.test6.R
 import com.example.test6.domain.passcode.PasswordRepository
 import com.example.test6.data.common.ResultWrapper
+import com.example.test6.datastore.DataStoreUtils
+import com.example.test6.domain.DataStoreRepository
 import com.example.test6.domain.passcode.PasscodeResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +17,10 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class PasswordViewModel @Inject constructor(private val passwordRepository:PasswordRepository) : ViewModel() {
+class PasswordViewModel @Inject constructor(
+    private val passwordRepository:PasswordRepository,
+    private val dataStoreRepository: DataStoreRepository
+) : ViewModel() {
 
     private val _passwordFlow = MutableStateFlow<PasswordScreenState>(PasswordScreenState())
     val passwordFlow: StateFlow<PasswordScreenState> = _passwordFlow
@@ -58,33 +63,35 @@ class PasswordViewModel @Inject constructor(private val passwordRepository:Passw
 
     }
 
+    private fun saveDataStore(token:String){
+        viewModelScope.launch {
+            dataStoreRepository.saveToken(DataStoreUtils.TOKEN,token)
+        }
+    }
+
     private fun checkPassword(){
         val currentPasswordState = _passwordFlow.value
         val passwordList = currentPasswordState.password
         val password = passwordList.joinToString("")
 
         var resultWrapper: ResultWrapper<PasscodeResponse>?
-        if(passwordList == listOf(0,9,3,4)){
-            d("tag123","success")
-            resultWrapper = ResultWrapper.Success(
-                PasscodeResponse("")
-            )
-        }else{
-            resultWrapper = ResultWrapper.Error(
-                "incorrect password"
-            )
-        }
         viewModelScope.launch {
             if(passwordList == listOf(0,9,3,4)){
                 passwordRepository.logIn(password).collect{
                     when(it){
                         is ResultWrapper.Success ->{
-                            resultWrapper = ResultWrapper.Success(data = it.data!!)
+
+                            val passcodeResponse = it.data!!
+
+                            resultWrapper = ResultWrapper.Success(data = passcodeResponse)
                             val newPasswordScreenState = PasswordScreenState(
                                 emptyList(),
                                 resultWrapper
                             )
                             d("tag123","success ${it.data}")
+
+                            saveDataStore(passcodeResponse.token)
+
                             _passwordFlow.emit(
                                 newPasswordScreenState
                             )

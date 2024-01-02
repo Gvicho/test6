@@ -1,4 +1,4 @@
-package com.example.test6.data.passcode
+package com.example.test6.data.model
 
 import com.squareup.moshi.Json
 

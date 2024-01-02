@@ -1,5 +1,6 @@
-package com.example.test6.data.home
+package com.example.test6.data.services
 
+import com.example.test6.data.model.TransactionsDto
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query

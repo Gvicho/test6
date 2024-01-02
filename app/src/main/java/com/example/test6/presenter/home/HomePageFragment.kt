@@ -22,6 +22,7 @@ class HomePageFragment : BaseFragment<FragmentHomePageBinding>(FragmentHomePageB
     private val viewModel: HomePageViewModel by viewModels()
     override fun setUp() {
         myAdaper = TransactionsRecyclerAdapter()
+        d("tag123","loadTransaction in Home")
         viewModel.loadTransactions()
 
         binding.recyclerTransaction.apply {
@@ -46,7 +47,7 @@ class HomePageFragment : BaseFragment<FragmentHomePageBinding>(FragmentHomePageB
 
     private fun success(){
         Toast.makeText(context,"Successful !", Toast.LENGTH_LONG).show()
-        d("tag123","succesfuly loaded")
+        d("tag123","Successfully loaded")
     }
 
     private fun errorWhileLoading(){
@@ -56,24 +57,28 @@ class HomePageFragment : BaseFragment<FragmentHomePageBinding>(FragmentHomePageB
     override fun setListeners() {
         binding.apply {
             btnLogout.setOnClickListener{
+                clearDataStoreToken()
                 navigateToPasscodePage()
             }
         }
 
         lifecycleScope.launch {
             viewModel.transactionsFlow.collect{
-                when(it!!.transactions){
-                    is ResultWrapper.Success ->{
-                        success()
-                        myAdaper.submitList(it.transactions.data!!.transactionList)
-                    }
-                    is ResultWrapper.Loading ->{
-                        loading(it.transactions.loading)
-                    }
-                    is ResultWrapper.Error ->{
-                        errorWhileLoading()
+                it?.let {
+                    when(it.transactions){
+                        is ResultWrapper.Success ->{
+                            success()
+                            myAdaper.submitList(it.transactions.data!!.transactionList)
+                        }
+                        is ResultWrapper.Loading ->{
+                            loading(it.transactions.loading)
+                        }
+                        is ResultWrapper.Error ->{
+                            errorWhileLoading()
+                        }
                     }
                 }
+
             }
         }
     }
@@ -89,5 +94,9 @@ class HomePageFragment : BaseFragment<FragmentHomePageBinding>(FragmentHomePageB
 
             navController.navigate(action,navOptions)
         }
+    }
+
+    private fun clearDataStoreToken(){
+        viewModel.clearSession()
     }
 }

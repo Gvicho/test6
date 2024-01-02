@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/passwordFragment">
+    app:startDestination="@id/splashFragment">
 
     <fragment
         android:id="@+id/homePageFragment"
@@ -14,6 +14,7 @@
             android:id="@+id/action_homePageFragment_to_passwordFragment"
             app:destination="@id/passwordFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/passwordFragment"
         android:name="com.example.test6.presenter.passcode.PasswordFragment"
@@ -21,6 +22,21 @@
         tools:layout="@layout/fragment_password" >
         <action
             android:id="@+id/action_passwordFragment_to_homePageFragment"
+            app:destination="@id/homePageFragment"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.example.test6.presenter.splash.SplashFragment"
+        android:label="fragment_splash"
+        tools:layout="@layout/fragment_splash" >
+        <action
+            android:id="@+id/action_splashFragment_to_passwordFragment"
+            app:destination="@id/passwordFragment" />
+        <action
+            android:id="@+id/action_splashFragment_to_homePageFragment"
             app:destination="@id/homePageFragment" />
     </fragment>
+
 </navigation>

@@ -1,5 +1,7 @@
-package com.example.test6.data.home
+package com.example.test6.data.mapper
 
+import com.example.test6.data.model.TransactionDto
+import com.example.test6.data.model.TransactionsDto
 import com.example.test6.domain.home.Transaction
 import com.example.test6.domain.home.Transactions
 import com.example.test6.domain.home.Transaction.TransactionType.Companion.stringToTransactionType
